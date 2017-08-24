@@ -1,5 +1,5 @@
 import string
-import pyperclip
+# import pyperclip
 from appJar import gui
 
 
@@ -14,6 +14,16 @@ def closectt(btn):
 def shhow(name):
     app.showSubWindow(name)
 
+def ascii_check(text):
+    for i in text:
+        if i not in string.ascii_letters:
+            return False
+
+        else:
+            pass
+    return True
+
+
 def encode(btn):
 
         shhow("ttc")
@@ -21,6 +31,14 @@ def encode(btn):
         # text = app.textBox("Text to Cipher", "Please input Text").upper()
         key = app.getEntry("Key").upper()
         # key = app.textBox("Key", "Please input Key").upper()
+        # if(ascii_check(text) or ascii_check(key)):
+        #     app.errorBox("Error!", "Please input only Alphabet")
+        #     app.setStopFunction(encode)
+        #     app.clearEntry("Text")
+        #     app.clearEntry("Key")
+        #
+        #
+        #
         app.clearEntry("Text")
         app.clearEntry("Key")
 
@@ -32,23 +50,33 @@ def encode(btn):
 
         i = 0
         cipher = ''
-        while i < len(text):
-            keylist = string.ascii_uppercase.index(key[i])
-            # print(keylist)
-            keylist = string.ascii_uppercase[keylist:] + string.ascii_uppercase[:keylist]
-            cipher += keylist[string.ascii_uppercase.index(text[i])]
-            i += 1
-        app.infoBox("Text to Cipher", "Cipher: " + str(cipher))
-        return str(cipher)
+        try:
+            while i < len(text):
+
+                keylist = string.ascii_uppercase.index(key[i])
+                # print(keylist)
+                keylist = string.ascii_uppercase[keylist:] + string.ascii_uppercase[:keylist]
+                cipher += keylist[string.ascii_uppercase.index(text[i])]
+                i += 1
+
+            app.infoBox("Text to Cipher", "Cipher: " + str(cipher))
+            return str(cipher)
+        except ValueError:
+                app.errorBox("Error!", "Please input only Alphabet")
+
+
         # print("Cipher: " + str(cipher))
 
 def decode(btn):
         shhow("ctt")
-        cipher = app.getEntry("Texts").upper()
-        # text = app.textBox("Text to Cipher", "Please input Text").upper()
+        cipher = app.getEntry("Cipher T").upper()
+
         key = app.getEntry("Keys").upper()
         # key = app.textBox("Key", "Please input Key").upper()
-        app.clearEntry("Texts")
+        # if(ascii_check(cipher) or ascii_check(key)):
+        #     app.errorBox("Error!", "Please input only Alphabet")
+        #
+        app.clearEntry("Cipher T")
         app.clearEntry("Keys")
 
         if len(key) < len(cipher):
@@ -59,19 +87,24 @@ def decode(btn):
 
         i = 0
         text = ''
-        while i < len(cipher):
-            keylist = string.ascii_uppercase.index(key[i])
-            keylist = string.ascii_uppercase[keylist:] + string.ascii_uppercase[:keylist]
-            text += string.ascii_uppercase[keylist.index(cipher[i])]
-            i += 1
-        app.infoBox("Cipher to Text", "Text: " + str(text))
+        try:
+            while i < len(cipher):
+                keylist = string.ascii_uppercase.index(key[i])
+                keylist = string.ascii_uppercase[keylist:] + string.ascii_uppercase[:keylist]
+                text += string.ascii_uppercase[keylist.index(cipher[i])]
+                i += 1
+            app.infoBox("Cipher to Text", "Text: " + str(text))
+        except ValueError:
+                app.errorBox("Error!", "Please input only Alphabet")
+
+
         # print("Plain Text: " + str(text))
 
 if __name__ == "__main__":
     text = ''
     key = ''
 
-    app = gui("Caesar Cipher", "500x500")
+    app = gui("Caesar Cipher GUI BY THANAWAT", "500x500")
     # mode = int(input("Enter Number to Choose Mode\nPlain Text to Cipher Text: 1\nCipher Text to Plain Text: 2\nMode: "))
     # cipher(mode)
     app.setSticky("new")
@@ -85,9 +118,8 @@ if __name__ == "__main__":
     app.setSticky("n")
     app.addButton("decode", decode)
 
-    app.addMessage("mess", """You can put a lot of text in this widget.
-The text will be wrapped over multiple lines.
-It's not possible to apply different styles to different words.""")
+    app.addMessage("mess", """This program will make a Cipher code from text
+    and also decode a Cipher text into a decoded text""")
 
     app.startSubWindow("ttc", "Text to Cipher", blocking=True)
     # app.go("ctt")
@@ -101,7 +133,7 @@ It's not possible to apply different styles to different words.""")
     app.startSubWindow("ctt", "Cipher to Text", blocking=True)
     # app.go("ctt")
     app.addLabel("CtT", "Cipher to text decoder")
-    app.addLabelEntry("Texts")
+    app.addLabelEntry("Cipher T")
     app.addLabelEntry("Keys")
     app.addButton("OK!", closectt)
     # app.addButton("Copy", cpy)
